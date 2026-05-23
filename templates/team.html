@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الفريق</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial;
+    background:#e8d5ef;
+}
+
+/* زر الرجوع */
+.back{
+    position:fixed;
+    top:10px;
+    left:10px;
+    background:#111;
+    color:#fff;
+    padding:8px 12px;
+    border-radius:10px;
+    text-decoration:none;
+    font-size:12px;
+    z-index:999;
+}
+
+.container{
+    max-width:360px;
+    margin:auto;
+    padding:12px;
+}
+
+.card{
+    background:#fff;
+    padding:15px;
+    border-radius:16px;
+    margin-bottom:15px;
+}
+
+.link-box{
+    background:#f1f1f1;
+    padding:10px;
+    border-radius:10px;
+    font-size:12px;
+    word-break:break-all;
+}
+
+.btn{
+    background:#111;
+    color:#fff;
+    text-align:center;
+    padding:10px;
+    border-radius:10px;
+    margin-top:10px;
+    cursor:pointer;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.stat{
+    background:#fff;
+    padding:10px;
+    border-radius:12px;
+    text-align:center;
+}
+
+.levels{
+    margin-top:15px;
+}
+
+.level{
+    background:#fff;
+    padding:12px;
+    border-radius:12px;
+    margin-bottom:10px;
+}
+
+.level h4{
+    margin:0;
+}
+
+.level p{
+    margin:5px 0;
+    color:#444;
+}
+
+.level span{
+    font-size:12px;
+    color:#888;
+}
+
+.small{
+    font-size:12px;
+    color:#666;
+    margin-top:10px;
+}
+
+/* Toast */
+#toast{
+    position:fixed;
+    bottom:20px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#111;
+    color:#fff;
+    padding:10px 14px;
+    border-radius:12px;
+    font-size:13px;
+    display:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- زر رجوع -->
+<a class="back" href="/">
+    ⬅ رجوع
+</a>
+
+<div class="container">
+
+    <div class="title">👥 فريق الإحالة</div>
+
+    <!-- رابط الدعوة -->
+    <div class="card">
+
+        <div class="small">شارك رابط الإحالة واكسب أرباح</div>
+
+        <div class="link-box">
+            {{ invite_link }}
+        </div>
+
+        <div class="btn" onclick="copyLink()">
+            📋 نسخ الرابط
+        </div>
+
+    </div>
+
+    <!-- إحصائيات -->
+    <div class="stats">
+
+        <div class="stat">
+            <span>فريق جديد</span>
+            <b>{{ team_count }}</b>
+        </div>
+
+        <div class="stat">
+            <span>إعادة شحن</span>
+            <b>$0.00</b>
+        </div>
+
+        <div class="stat">
+            <span>إعادة الشحن الأولى</span>
+            <b>0</b>
+        </div>
+
+        <div class="stat">
+            <span>سحب أول مرة</span>
+            <b>0</b>
+        </div>
+
+    </div>
+
+    <!-- المستويات -->
+    <div class="levels">
+
+        <div class="level">
+            <h4>المستوى 1</h4>
+            <p>13%</p>
+            <span>4/4</span>
+            <b>0 USDT</b>
+        </div>
+
+        <div class="level">
+            <h4>المستوى 2</h4>
+            <p>3%</p>
+            <span>0/0</span>
+            <b>0 USDT</b>
+        </div>
+
+        <div class="level">
+            <h4>المستوى 3</h4>
+            <p>2%</p>
+            <span>0/0</span>
+            <b>0 USDT</b>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+function showToast(msg){
+    let t = document.getElementById("toast");
+    t.innerText = msg;
+    t.style.display = "block";
+
+    setTimeout(()=>{
+        t.style.display = "none";
+    }, 2000);
+}
+
+function copyLink(){
+    navigator.clipboard.writeText("{{ invite_link }}");
+    showToast("✅ تم نسخ الرابط");
+}
+</script>
+
+</body>
+</html>

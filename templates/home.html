@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIP</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial;
+    background:#e8d5ef;
+    padding-bottom:80px;
+}
+
+/* container */
+.container{
+    max-width:360px;
+    margin:auto;
+    padding:12px;
+}
+
+/* top banner */
+.banner{
+    background:white;
+    border-radius:20px;
+    overflow:hidden;
+    margin-bottom:15px;
+}
+
+.banner img{
+    width:100%;
+    display:block;
+}
+
+/* balance card */
+.card{
+    background:#f5f5f5;
+    border-radius:20px;
+    padding:15px;
+    margin-bottom:15px;
+}
+
+.top-user{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.balance{
+    font-size:15px;
+    font-weight:bold;
+}
+
+.email{
+    margin-top:8px;
+    color:#333;
+    font-size:11px;
+}
+
+.vip{
+    background:#f5d48c;
+    padding:6px 14px;
+    border-radius:20px;
+    font-size:12px;
+}
+
+/* grid buttons */
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+    margin-top:20px;
+}
+
+.box{
+    background:#b57d8c;
+    border-radius:18px;
+    padding:12px;
+    color:black;
+    text-decoration:none;
+    text-align:center;
+    font-size:14px;
+    font-weight:bold;
+}
+
+.box img{
+    width:50px;
+    margin-bottom:10px;
+}
+
+/* VIP CARD */
+.vip-card{
+    text-align:center;
+    background:linear-gradient(135deg,#1c1c2b,#2a1450);
+    color:#fff;
+    border-radius:16px;
+    padding:15px;
+    margin-bottom:15px;
+}
+
+.vip-btn{
+    display:block;
+    background:#ffffff;
+    color:#000;
+    padding:10px;
+    border-radius:10px;
+    text-decoration:none;
+    font-weight:bold;
+    margin-top:10px;
+}
+
+/* big program box */
+.program{
+    background:#8c93e8;
+    border-radius:18px;
+    padding:12px;
+    margin-top:18px;
+    font-size:16px;
+    font-weight:bold;
+    color:black;
+    text-align:right;
+}
+
+/* bottom nav */
+.bottom-nav{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    background:linear-gradient(135deg,#1a1a2b,#2a1450);
+    display:flex;
+    justify-content:space-around;
+    padding:10px 0;
+    border-top:1px solid rgba(255,255,255,0.1);
+    box-shadow:0 -5px 15px rgba(0,0,0,0.4);
+}
+
+.bottom-nav .item{
+    text-decoration:none;
+    color:#ccc;
+    text-align:center;
+    font-size:12px;
+    flex:1;
+    transition:0.2s;
+}
+
+.bottom-nav .item:hover{
+    color:#fff;
+    transform:scale(1.1);
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- VIP CARD -->
+<div class="vip-card">
+
+    <h3 style="margin:0;">👑 VIP</h3>
+
+    <p style="opacity:0.8; font-size:13px;">
+        ادخل إلى نظام VIP واربح يوميًا
+    </p>
+
+    <a href="/vip" class="vip-btn">
+        🚀 دخول VIP
+    </a>
+
+</div>
+
+<div class="container">
+
+    <!-- banner -->
+    <div class="banner">
+        <img src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a">
+    </div>
+
+    <!-- user -->
+    <div class="card">
+
+        <div class="top-user">
+            <div>
+                <div class="balance">{{ balance }}</div>
+                <div class="email">{{ email }}</div>
+            </div>
+
+            <div class="vip">VIP1</div>
+        </div>
+
+        <!-- buttons -->
+        <div class="grid">
+
+            <a class="box" href="/deposit">
+                🐷
+                <br>
+                تعبئة رصيد
+            </a>
+
+            <a class="box" href="/withdraw">
+                💳
+                <br>
+                ينسحب
+            </a>
+
+            <a class="box" href="/team">
+                ✉️
+                <br>
+                دعوة الأصدقاء
+            </a>
+
+            <a class="box" href="/agency">
+                👥
+                <br>
+                التعاون بين الوكالات
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- notifications -->
+    <div class="card">
+
+        <h3>📢 معلومات النظام</h3>
+
+        {% for n in notifications %}
+
+        <div style="
+        background:#f3f4f6;
+        padding:10px;
+        border-radius:12px;
+        margin-top:10px;
+        font-size:12px;
+        ">
+
+        ✅ {{ n[0] }}
+
+        <br><br>
+
+        {{ n[1] }}
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    <!-- program -->
+    <div class="program">
+        برنامج
+    </div>
+
+</div>
+
+<!-- bottom nav -->
+<div class="bottom-nav">
+
+    <a href="/" class="item">
+        🏠<br>الرئيسية
+    </a>
+
+    <a href="/vip" class="item">
+        👑<br>VIP
+    </a>
+
+    <a href="/team" class="item">
+        👥<br>الفريق
+    </a>
+
+    <a href="/withdraw" class="item">
+        💸<br>سحب
+    </a>
+
+</div>
+
+</body>
+</html>          

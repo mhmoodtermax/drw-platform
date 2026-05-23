@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تسجيل</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    
+    /* خلفية احترافية */
+    background: linear-gradient(135deg, #7c3aed, #c084fc, #f5d0fe);
+}
+
+/* الكرت */
+.card{
+    width:90%;
+    max-width:340px;
+    padding:20px;
+    border-radius:25px;
+
+    /* Glass effect */
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    border:1px solid rgba(255,255,255,0.3);
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+    text-align:center;
+    color:white;
+}
+
+/* العنوان */
+h2{
+    margin-bottom:20px;
+}
+
+/* inputs */
+input{
+    width:100%;
+    padding:12px;
+    margin:8px 0;
+    border-radius:12px;
+    border:none;
+    outline:none;
+    font-size:14px;
+}
+
+/* زر */
+button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:none;
+    border-radius:12px;
+    background:#111;
+    color:white;
+    font-size:15px;
+    font-weight:bold;
+}
+
+/* رابط */
+a{
+    display:block;
+    margin-top:12px;
+    color:white;
+    font-size:13px;
+    text-decoration:none;
+    opacity:0.9;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+    <h2>👑 تسجيل دخول</h2>
+
+    <form method="POST">
+        <input type="email" name="email" placeholder="الإيميل">
+        <input type="password" name="password" placeholder="كلمة المرور">
+        <button type="submit">تسجيل</button>
+    </form>
+
+
+</div>
+
+</body>
+</html>

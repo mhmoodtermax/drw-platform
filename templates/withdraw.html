@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>سحب</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:#e8d5ef;
+}
+
+.back{
+    position:fixed;
+    top:12px;
+    left:12px;
+    background:#7c3aed;
+    color:white;
+    padding:6px 10px;
+    border-radius:10px;
+    text-decoration:none;
+    font-size:12px;
+}
+
+.container{
+    max-width:360px;
+    margin:auto;
+    padding:15px;
+}
+
+.title{
+    text-align:center;
+    font-size:18px;
+    margin-top:20px;
+    font-weight:bold;
+}
+
+/* card */
+.card{
+    background:white;
+    border-radius:18px;
+    padding:15px;
+    margin-top:15px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* row */
+.row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:#f3f4f6;
+    padding:10px;
+    border-radius:12px;
+    margin-top:10px;
+    font-size:13px;
+    word-break:break-all;
+}
+
+/* coins */
+.coins{
+    display:flex;
+    gap:8px;
+    margin-bottom:10px;
+}
+
+.coins img{
+    width:28px;
+    height:28px;
+    border-radius:50%;
+}
+
+/* input */
+input{
+    width:100%;
+    padding:10px;
+    margin-top:10px;
+    border-radius:10px;
+    border:1px solid #ddd;
+    outline:none;
+    font-size:13px;
+}
+
+input::placeholder{
+    color:#999;
+}
+
+/* button */
+button{
+    width:100%;
+    padding:11px;
+    margin-top:10px;
+    border:none;
+    border-radius:12px;
+    font-size:14px;
+    cursor:pointer;
+    background:#7c3aed;
+    color:white;
+    font-weight:bold;
+}
+
+/* small text */
+.small{
+    font-size:12px;
+    color:#555;
+    margin-top:8px;
+    line-height:1.7;
+}
+
+/* toast */
+#toast{
+    position:fixed;
+    bottom:80px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#111;
+    color:white;
+    padding:10px 15px;
+    border-radius:12px;
+    font-size:13px;
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<a class="back" href="/">⬅ رجوع</a>
+
+<div class="container">
+
+    <div class="title">💸 سحب</div>
+
+    <div class="card">
+
+        <!-- flash messages -->
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for msg in messages %}
+              <div style="
+                background:#111;
+                color:white;
+                padding:10px;
+                border-radius:12px;
+                margin-bottom:10px;
+                font-size:13px;
+              ">
+                {{ msg }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <!-- coins -->
+        <div class="coins">
+            <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" width="40">
+            <img src="https://cryptologos.cc/logos/tron-trx-logo.png" width="40">
+        </div>
+
+        <div class="row">
+            <span>⏱ سحب 24 ساعة</span>
+        </div>
+
+        <div class="row">
+            <span>💰 الرصيد الإجمالي</span>
+            <span id="balance">{{ balance }}</span>
+        </div>
+
+        <div class="row">
+            <span>📌 طريقة السحب</span>
+            <span>TRC20-USDT</span>
+        </div>
+
+        <div class="row">
+            <span>📤 سيتم استلام</span>
+            <span>{{ balance }}</span>
+        </div>
+
+        <form method="POST">
+
+            <input type="number"
+            name="amount"
+            id="amount"
+            placeholder="حصة نسبية 15.00 - 1000.00">
+
+            <input type="text"
+            name="address"
+            placeholder="📍 عنوان السحب">
+
+            <input type="password"
+            name="password"
+            placeholder="🔒 كلمة المرور">
+
+            <button type="submit">
+                ✔ تأكيد السحب
+            </button>
+
+        </form>
+
+        <div class="small">
+            ⚠ السحب يتم خلال 24 ساعة<br>
+            ⚠ تأكد من صحة عنوان TRC20<br>
+            ⚠ أي خطأ غير مسؤول عنه النظام
+        </div>
+
+    </div>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+function showToast(msg){
+    let t = document.getElementById("toast");
+    t.innerText = msg;
+    t.style.display = "block";
+
+    setTimeout(()=>{
+        t.style.display = "none";
+    }, 2000);
+}
+
+function withdraw(){
+
+    let amount = parseFloat(document.getElementById("amount").value);
+    let balance = parseFloat(document.getElementById("balance").innerText);
+
+    if(!amount){
+        showToast("❌ أدخل مبلغ");
+        return;
+    }
+
+    if(amount < 15){
+        showToast("❌ الحد الأدنى للسحب 15 USDT");
+        return;
+    }
+
+    if(amount > balance){
+        showToast("❌ لا يوجد رصيد كافي");
+        return;
+    }
+
+    showToast("✅ تم إرسال طلب السحب");
+}
+</script>
+
+</body>
+</html>

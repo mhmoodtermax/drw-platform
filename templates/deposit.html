@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تعبئة رصيد</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:#e8d5ef;
+}
+
+.back{
+    position:fixed;
+    top:12px;
+    left:12px;
+    background:#7c3aed;
+    color:white;
+    padding:6px 10px;
+    border-radius:10px;
+    text-decoration:none;
+    font-size:12px;
+}
+
+.container{
+    max-width:360px;
+    margin:auto;
+    padding:15px;
+}
+
+.title{
+    text-align:center;
+    font-size:18px;
+    margin-top:20px;
+    font-weight:bold;
+}
+
+/* card */
+.card{
+    background:white;
+    border-radius:18px;
+    padding:15px;
+    margin-top:15px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* row */
+.row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:#f3f4f6;
+    padding:10px;
+    border-radius:12px;
+    margin-top:10px;
+    font-size:13px;
+    word-break:break-all;
+}
+
+/* coin icons */
+.coins{
+    display:flex;
+    gap:8px;
+    margin-bottom:10px;
+}
+
+.coins img{
+    width:28px;
+    height:28px;
+    border-radius:50%;
+}
+
+/* buttons */
+button{
+    width:100%;
+    padding:11px;
+    margin-top:10px;
+    border:none;
+    border-radius:12px;
+    font-size:14px;
+    cursor:pointer;
+}
+
+.copy{
+    background:#7c3aed;
+    color:white;
+}
+
+.done{
+    background:#111;
+    color:white;
+}
+
+/* notification */
+#toast{
+    position:fixed;
+    bottom:80px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#111;
+    color:white;
+    padding:10px 15px;
+    border-radius:12px;
+    font-size:13px;
+    display:none;
+}
+</style>
+
+</head>
+
+<body>
+
+<a class="back" href="/">⬅ رجوع</a>
+
+<div class="container">
+
+    <div class="title">💰 تعبئة رصيد</div>
+
+    <div class="card">
+
+        <!-- coins icons -->
+        <div class="coins">
+            <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" />
+            <img src="https://cryptologos.cc/logos/tron-trx-logo.png" />
+            <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" />
+        </div>
+
+        <div>TRC20-USDT</div>
+
+        <div class="row">
+            <span>💳 العنوان</span>
+        </div>
+
+        <div class="row" id="wallet">
+            TPpBXMa6s9XEQxfwjvDikeMY9sdEEpe2MD
+        </div>
+
+        <button class="copy" onclick="copyText()">📋 نسخ العنوان</button>
+
+        <button class="done" onclick="done()">✔ اكتملت العملية</button>
+
+        <div style="font-size:12px; margin-top:12px; color:#555; line-height:1.7;">
+            ✅ فقط TRC20-USDT<br>
+            ✅ الحد الأدنى 5$<br>
+            ⚠ أي مبلغ أقل لن يُضاف
+        </div>
+
+    </div>
+
+</div>
+
+<!-- toast -->
+<div id="toast"></div>
+
+<script>
+function showToast(msg){
+    let t = document.getElementById("toast");
+    t.innerText = msg;
+    t.style.display = "block";
+
+    setTimeout(()=>{
+        t.style.display = "none";
+    }, 2000);
+}
+
+function copyText(){
+    let text = document.getElementById("wallet").innerText;
+    navigator.clipboard.writeText(text);
+    showToast("📋 تم النسخ بنجاح");
+}
+
+function done(){
+    showToast("⏳ تم إرسال الطلب للمراجعة");
+}
+</script>
+
+</body>
+</html>
