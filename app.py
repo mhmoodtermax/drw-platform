@@ -88,8 +88,18 @@ def withdraw():
     conn = sqlite3.connect("db.db")
     c = conn.cursor()
 
-    if request.method == "POST":
+    # 🔥 GET request
+    if request.method == "GET":
+        c.execute("SELECT balance FROM users WHERE email=?", (email,))
+        row = c.fetchone()
 
+        balance = row[0] if row else 0
+
+        conn.close()
+        return render_template("withdraw.html", balance=balance)
+
+    # 🔥 POST request (السحب)
+    try:
         c.execute("SELECT balance FROM users WHERE email=?", (email,))
         row = c.fetchone()
 
@@ -99,7 +109,11 @@ def withdraw():
 
         balance = row[0]
 
-        amount = float(request.form["amount"])
+        amount = float(request.form.get("amount", 0))
+
+        if amount <= 0:
+            conn.close()
+            return "❌ مبلغ غير صحيح"
 
         if amount < 15:
             flash("❌ الحد الأدنى 15")
@@ -113,7 +127,10 @@ def withdraw():
 
         new_balance = balance - amount
 
-        c.execute("UPDATE users SET balance=? WHERE email=?", (new_balance, email))
+        c.execute(
+            "UPDATE users SET balance=? WHERE email=?",
+            (new_balance, email)
+        )
 
         now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
@@ -125,18 +142,12 @@ def withdraw():
         conn.commit()
         conn.close()
 
-        flash("✅ تم السحب")
+        flash("✅ تم السحب بنجاح")
         return redirect("/")
 
-    # GET request
-    c.execute("SELECT balance FROM users WHERE email=?", (email,))
-    row = c.fetchone()
-
-    balance = row[0] if row else 0
-
-    conn.close()
-
-    return render_template("withdraw.html", balance=balance)
+    except Exception as e:
+        conn.close()
+        return f"Server Error: {str(e)}"
 
 # ================= REGISTER =================
 @app.route("/register", methods=["GET", "POST"])
@@ -197,7 +208,8 @@ def login():
             session["user"] = email
             return redirect("/")
         else:
-            return "❌ خطأ بيانات"
+            flash("❌ خطأ في البريد الإلكتروني أو كلمة المرور")
+            return redirect("/login")
 
     return render_template("login.html")
 
