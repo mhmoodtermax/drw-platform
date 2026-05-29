@@ -88,19 +88,27 @@ def withdraw():
     conn = sqlite3.connect("db.db")
     c = conn.cursor()
 
-    c.execute("SELECT balance FROM users WHERE email=?", (email,))
-    balance = c.fetchone()[0]
-
     if request.method == "POST":
+
+        c.execute("SELECT balance FROM users WHERE email=?", (email,))
+        row = c.fetchone()
+
+        if not row:
+            conn.close()
+            return "User not found"
+
+        balance = row[0]
 
         amount = float(request.form["amount"])
 
         if amount < 15:
             flash("❌ الحد الأدنى 15")
+            conn.close()
             return redirect("/withdraw")
 
         if amount > balance:
             flash("❌ رصيد غير كافي")
+            conn.close()
             return redirect("/withdraw")
 
         new_balance = balance - amount
@@ -109,8 +117,10 @@ def withdraw():
 
         now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
-        c.execute("INSERT INTO notifications(email,message,date) VALUES(?,?,?)",
-                  (email, f"تم السحب {amount} USDT", now))
+        c.execute(
+            "INSERT INTO notifications(email,message,date) VALUES(?,?,?)",
+            (email, f"تم السحب {amount} USDT", now)
+        )
 
         conn.commit()
         conn.close()
@@ -118,7 +128,14 @@ def withdraw():
         flash("✅ تم السحب")
         return redirect("/")
 
+    # GET request
+    c.execute("SELECT balance FROM users WHERE email=?", (email,))
+    row = c.fetchone()
+
+    balance = row[0] if row else 0
+
     conn.close()
+
     return render_template("withdraw.html", balance=balance)
 
 # ================= REGISTER =================
@@ -195,11 +212,20 @@ def team():
     conn = sqlite3.connect("db.db")
     c = conn.cursor()
 
+    # invite code للمستخدم
     c.execute("SELECT invite_code FROM users WHERE email=?", (email,))
-    invite_code = c.fetchone()[0]
+    row = c.fetchone()
 
+    if not row:
+        conn.close()
+        return "User not found"
+
+    invite_code = row[0]
+
+    # رابط الدعوة الصحيح
     link = f"https://drw-platform.onrender.com/register?ref={invite_code}"
 
+    # عدد الفريق (المهم هنا referred_by)
     c.execute("SELECT COUNT(*) FROM users WHERE referred_by=?", (invite_code,))
     count = c.fetchone()[0]
 
