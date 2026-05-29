@@ -10,51 +10,61 @@
 body{
     margin:0;
     font-family:Arial;
-    background:#0f0f1a;
-    color:#fff;
+    background:#0f111a;
+    color:white;
 }
 
-.container{
-    max-width:360px;
-    margin:auto;
-    padding:12px;
-}
-
+/* back */
 .back{
     position:fixed;
     top:10px;
     left:10px;
-    background:#000;
-    color:#fff;
+    background:#00d4ff;
+    color:black;
     padding:8px 12px;
     border-radius:10px;
     text-decoration:none;
     font-size:12px;
+    font-weight:bold;
 }
 
+/* container */
+.container{
+    max-width:380px;
+    margin:auto;
+    padding:12px;
+}
+
+/* VIP card */
 .vip{
-    background:linear-gradient(135deg,#1c1c2b,#2a1450);
+    background:#1b1f2e;
     border-radius:18px;
     padding:12px;
     margin-bottom:15px;
     box-shadow:0 4px 15px rgba(0,0,0,0.4);
 }
 
+/* title */
 .title{
     font-size:16px;
     font-weight:bold;
+    color:#00d4ff;
 }
 
+/* row */
 .row{
     display:flex;
     justify-content:space-between;
     margin-top:8px;
     font-size:13px;
+    color:#aaa;
 }
 
+/* daily */
 .daily{
-    background:#fff;
-    color:#000;
+    background:#0f111a;
+    border:1px solid #00d4ff;
+    color:#00d4ff;
     padding:8px;
     border-radius:10px;
     margin-top:10px;
@@ -62,16 +72,18 @@ body{
     font-weight:bold;
 }
 
+/* total */
 .total{
     margin-top:6px;
     font-size:12px;
     opacity:0.8;
 }
 
+/* button */
 .btn{
     margin-top:10px;
-    background:gold;
-    color:#000;
+    background:#00d4ff;
+    color:black;
     padding:10px;
     border-radius:10px;
     text-align:center;
@@ -79,6 +91,7 @@ body{
     cursor:pointer;
 }
 
+/* image */
 img{
     width:100%;
     border-radius:12px;
@@ -87,18 +100,20 @@ img{
     object-fit:cover;
 }
 
-/* Toast */
+/* toast */
 #toast{
     position:fixed;
     bottom:80px;
     left:50%;
     transform:translateX(-50%);
-    color:#fff;
-    padding:10px 15px;
-    border-radius:12px;
+    background:rgba(0,0,0,0.85);
+    color:#00d4ff;
+    padding:12px 16px;
+    border-radius:14px;
     font-size:13px;
     display:none;
-    z-index:9999;
+    border:1px solid #00d4ff;
+    box-shadow:0 0 15px rgba(0,212,255,0.3);
 }
 
 </style>
@@ -106,75 +121,73 @@ img{
 
 <body>
 
-<a class="back" href="/">
-⬅ رجوع
-</a>
+<a class="back" href="/">⬅ رجوع</a>
 
 <div class="container">
 
-<!-- VIP0 -->
+<!-- VIP 0 -->
 <div class="vip">
     <div class="title">VIP 0</div>
 
-    <div class="row"><span>مهمات يوميه</span><span>1</span></div>
-    <div class="row"><span>مصلحة بسيطة</span><span>20</span></div>
+    <div class="row"><span>مهمات يومية</span><span>متاح</span></div>
+    <div class="row"><span>الربح</span><span>20 USDT</span></div>
 
     <div class="daily">الربح اليومي: 20 USDT</div>
     <div class="total">إجمالي الربح: 2,737.50 USDT</div>
 
-    <div class="btn" onclick="openVIP(10)">10 USDT - افتح الآن</div>
+    <div class="btn" onclick="openVIP(10)">افتح الآن - 10 USDT</div>
 
-    <img src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a">
+    <img src="https://images.unsplash.com/photo-1642104704074-907c0698cbd9?q=80&w=1200&auto=format&fit=crop">
 </div>
 
-<!-- VIP1 -->
+<!-- VIP 1 -->
 <div class="vip">
     <div class="title">VIP 1</div>
 
-    <div class="row"><span>مهمات يوميه</span><span>1</span></div>
-    <div class="row"><span>مصلحة بسيطة</span><span>50</span></div>
+    <div class="row"><span>مهمات يومية</span><span>متاح</span></div>
+    <div class="row"><span>الربح</span><span>50 USDT</span></div>
 
     <div class="daily">الربح اليومي: 50 USDT</div>
     <div class="total">إجمالي الربح: 6,737.50 USDT</div>
 
-    <div class="btn" onclick="openVIP(24)">افتح الآن 24 USDT</div>
+    <div class="btn" onclick="openVIP(25)">افتح الآن - 25 USDT</div>
 
-    <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee">
+    <img src="https://images.unsplash.com/photo-1642104704074-907c0698cbd9?q=80&w=1200&auto=format&fit=crop">
 </div>
 
-<!-- VIP2 -->
+<!-- VIP 2 -->
 <div class="vip">
     <div class="title">VIP 2</div>
 
-    <div class="row"><span>مهمات يوميه</span><span>1</span></div>
-    <div class="row"><span>مصلحة بسيطة</span><span>100</span></div>
+    <div class="row"><span>مهمات يومية</span><span>متقدم</span></div>
+    <div class="row"><span>الربح</span><span>100 USDT</span></div>
 
     <div class="daily">الربح اليومي: 100 USDT</div>
     <div class="total">إجمالي الربح: 9,643.70 USDT</div>
 
-    <div class="btn" onclick="openVIP(60)">60 USDT - افتح الآن</div>
+    <div class="btn" onclick="openVIP(60)">افتح الآن - 60 USDT</div>
 
-    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475">
+    <img src="https://images.unsplash.com/photo-1642104704074-907c0698cbd9?q=80&w=1200&auto=format&fit=crop">
 </div>
 
-<!-- VIP3 -->
+<!-- VIP 3 -->
 <div class="vip">
     <div class="title">VIP 3</div>
 
-    <div class="row"><span>مهمات يوميه</span><span>1</span></div>
-    <div class="row"><span>مصلحة بسيطة</span><span>300</span></div>
+    <div class="row"><span>مهمات يومية</span><span>احترافي</span></div>
+    <div class="row"><span>الربح</span><span>300 USDT</span></div>
 
     <div class="daily">الربح اليومي: 300 USDT</div>
     <div class="total">إجمالي الربح: 77,844.70 USDT</div>
 
-    <div class="btn" onclick="openVIP(150)">150 USDT - افتح الآن</div>
+    <div class="btn" onclick="openVIP(150)">افتح الآن - 150 USDT</div>
 
-    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d">
+    <img src="https://images.unsplash.com/photo-1642104704074-907c0698cbd9?q=80&w=1200&auto=format&fit=crop">
 </div>
 
 </div>
 
-<!-- Toast -->
+<!-- toast -->
 <div id="toast"></div>
 
 <script>
@@ -185,7 +198,13 @@ function showToast(msg, success=true){
     t.innerText = msg;
     t.style.display = "block";
 
-    t.style.background = success ? "#22c55e" : "#ef4444";
+    if(success){
+        t.style.color = "#00d4ff";
+        t.style.border = "1px solid #00d4ff";
+    } else {
+        t.style.color = "#ff4d4d";
+        t.style.border = "1px solid #ff4d4d";
+    }
 
     setTimeout(()=>{
         t.style.display = "none";
@@ -196,19 +215,8 @@ function openVIP(price){
 
     let balance = parseFloat("{{ balance }}");
 
-    if(balance <= 0){
-        showToast("❌ لا يوجد رصيد كافي", false);
-        return;
-    }
-
     if(balance < price){
-        showToast("❌ لا يوجد رصيد كافي", false);
-        return;
-    }
-
-    // VIP 0 special message
-    if(price == 10){
-        showToast("✅ تم فتح بنجاح", true);
+        showToast("❌ رصيد غير كافي", false);
         return;
     }
 

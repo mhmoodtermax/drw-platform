@@ -1,97 +1,212 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تسجيل</title>
+<title>تسجيل الدخول</title>
 
 <style>
+
 body{
     margin:0;
     font-family:Arial;
-    height:100vh;
+    background:#0f111a;
+    color:white;
     display:flex;
     justify-content:center;
     align-items:center;
-    
-    /* خلفية احترافية */
-    background: linear-gradient(135deg, #7c3aed, #c084fc, #f5d0fe);
+    min-height:100vh;
 }
 
-/* الكرت */
+/* card */
 .card{
     width:90%;
-    max-width:340px;
-    padding:20px;
-    border-radius:25px;
-
-    /* Glass effect */
-    background: rgba(255,255,255,0.15);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-
-    border:1px solid rgba(255,255,255,0.3);
-    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+    max-width:360px;
+    background:#1b1f2e;
+    padding:18px;
+    border-radius:18px;
+    box-shadow:0 0 20px rgba(0,212,255,0.15);
     text-align:center;
-    color:white;
 }
 
-/* العنوان */
+/* flag */
+.flag{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    object-fit:cover;
+    margin-top:-60px;
+    border:3px solid #00d4ff;
+    background:#0f111a;
+}
+
+/* title */
 h2{
-    margin-bottom:20px;
+    margin:10px 0;
+    color:#00d4ff;
 }
 
 /* inputs */
 input{
     width:100%;
     padding:12px;
-    margin:8px 0;
+    margin-top:10px;
     border-radius:12px;
-    border:none;
+    border:1px solid #333;
+    background:#0f111a;
+    color:white;
     outline:none;
-    font-size:14px;
+    font-size:13px;
+    transition:0.2s;
 }
 
-/* زر */
+input:focus{
+    border-color:#00d4ff;
+    box-shadow:0 0 8px rgba(0,212,255,0.3);
+}
+
+/* button */
 button{
     width:100%;
     padding:12px;
-    margin-top:10px;
+    margin-top:15px;
     border:none;
     border-radius:12px;
-    background:#111;
-    color:white;
-    font-size:15px;
+    background:#00d4ff;
+    color:black;
     font-weight:bold;
+    cursor:pointer;
+    font-size:14px;
+    transition:0.2s;
 }
 
-/* رابط */
+button:hover{
+    transform:scale(1.02);
+}
+
+/* links */
 a{
     display:block;
     margin-top:12px;
-    color:white;
-    font-size:13px;
+    color:#aaa;
+    font-size:12px;
     text-decoration:none;
-    opacity:0.9;
 }
+
+a:hover{
+    color:#00d4ff;
+}
+
+/* small text */
+small{
+    display:block;
+    margin-top:10px;
+    color:#666;
+}
+
+/* 🔥 Toast */
+#toast{
+    position:fixed;
+    bottom:80px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#1b1f2e;
+    color:#00d4ff;
+    padding:12px 16px;
+    border-radius:14px;
+    font-size:13px;
+    border:1px solid #00d4ff;
+    display:none;
+    box-shadow:0 0 15px rgba(0,212,255,0.3);
+    z-index:9999;
+    animation:pop 0.3s ease;
+}
+
+@keyframes pop{
+    from{opacity:0; transform:translate(-50%,20px);}
+    to{opacity:1; transform:translate(-50%,0);}
+}
+
+/* shake عند الخطأ */
+.shake{
+    animation:shake 0.3s;
+}
+
+@keyframes shake{
+    0%{transform:translateX(0);}
+    25%{transform:translateX(-5px);}
+    50%{transform:translateX(5px);}
+    75%{transform:translateX(-5px);}
+    100%{transform:translateX(0);}
+}
+
 </style>
 
 </head>
 
 <body>
 
-<div class="card">
+<div class="card" id="card">
 
-    <h2>👑 تسجيل دخول</h2>
+    <!-- 🇸🇦 علم السعودية -->
+    <img class="flag"
+         src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg"
+         alt="Saudi Flag">
 
-    <form method="POST">
-        <input type="email" name="email" placeholder="الإيميل">
-        <input type="password" name="password" placeholder="كلمة المرور">
-        <button type="submit">تسجيل</button>
+    <h2>تسجيل الدخول</h2>
+
+    <form method="POST" onsubmit="return validateLogin(event)">
+
+        <input type="email" name="email" id="email" placeholder="البريد الإلكتروني" required>
+
+        <input type="password" name="password" id="password" placeholder="كلمة المرور" required>
+
+        <button type="submit">دخول</button>
+
     </form>
 
+    <a href="/register">إنشاء حساب جديد</a>
+
+    <small>DRW - منصة استثمار رقمية</small>
 
 </div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+
+function showToast(msg){
+    let t = document.getElementById("toast");
+    t.innerText = msg;
+    t.style.display = "block";
+
+    setTimeout(()=>{
+        t.style.display = "none";
+    }, 2500);
+}
+
+function validateLogin(e){
+    let email = document.getElementById("email").value;
+    let pass = document.getElementById("password").value;
+    let card = document.getElementById("card");
+
+    if(email === "" || pass === ""){
+        e.preventDefault();
+
+        showToast("❌ يرجى تعبئة جميع الحقول");
+
+        card.classList.add("shake");
+        setTimeout(()=>card.classList.remove("shake"), 300);
+
+        return false;
+    }
+
+    return true;
+}
+
+</script>
 
 </body>
 </html>

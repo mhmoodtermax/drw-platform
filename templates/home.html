@@ -1,280 +1,296 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VIP</title>
+
+<title>DRW</title>
+
+<link rel="stylesheet" href="/static/style.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<div class="header">
+
+    <div class="left">
+
+        <div class="logo-circle">
+            DRW
+        </div>
+
+        <div class="logo-text">
+            DRW
+        </div>
+
+    </div>
+
+    <div class="right">
+
+        <i class="fa-solid fa-comment"></i>
+
+        <i class="fa-solid fa-globe"></i>
+
+    </div>
+
+</div>
+
+<!-- NEWS -->
+
+<div class="news-bar">
+
+    <i class="fa-solid fa-bullhorn"></i>
+
+    <marquee>
+        مرحباً {{email}} أهلاً بك في منصة DRW
+    </marquee>
+
+</div>
+
+<!-- BANNER -->
+
+<div class="banner">
+
+<img src="https://images.unsplash.com/photo-1642104704074-907c0698cbd9?q=80&w=1200&auto=format&fit=crop">
+
+</div>
+
+<!-- BALANCE -->
+
+<div class="balance-card">
+
+    <div class="balance-item">
+
+        <span>الحساب الكلي</span>
+
+        <h2>{{balance}} USDT</h2>
+
+        <p>≈ ${{balance}}</p>
+
+    </div>
+
+    <div class="balance-item">
+
+        <span>أصول الربح</span>
+
+        <h2>0.00 USDT</h2>
+
+        <p>≈ $0.00</p>
+
+    </div>
+
+</div>
+
+<!-- TELEGRAM -->
+
+<a class="telegram-btn" href="#">
+    <i class="fa-brands fa-telegram"></i>
+</a>
+
+<!-- BUTTONS -->
+
+<div class="actions">
+
+    <a href="/deposit">
+        <div class="circle yellow">
+            <i class="fa-solid fa-plus"></i>
+        </div>
+        <p>تعبئة</p>
+    </a>
+
+    <a href="/withdraw">
+        <div class="circle yellow">
+            <i class="fa-solid fa-minus"></i>
+        </div>
+        <p>سحب</p>
+    </a>
+
+    <a href="/tasks">
+        <div class="circle yellow">
+            <i class="fa-solid fa-download"></i>
+        </div>
+        <p>تحميل</p>
+    </a>
+
+    <a href="/vip">
+        <div class="circle yellow">
+            <i class="fa-solid fa-id-card"></i>
+        </div>
+        <p>معلومات</p>
+    </a>
+
+</div>
+
+<!-- BOXES -->
+
+<div class="small-boxes">
+
+    <div class="small-box">
+        <i class="fa-solid fa-circle-question"></i>
+        <p>المساعدة</p>
+    </div>
+
+    <a class="small-box" href="/team">
+      <i class="fa-solid fa-users"></i>
+      <p>ادعو أصدقاء</p>
+    </a>
+
+    <div class="small-box">
+        <i class="fa-solid fa-wallet"></i>
+        <p>المحفظة</p>
+    </div>
+
+</div>
+
+<!-- إشعارات السحب داخل الصفحة -->
+<div class="notify-feed" id="notifyFeed"></div>
+
+<!-- BOTTOM -->
+
+<div class="bottom-nav">
+
+    <a class="active" href="/">
+        <i class="fa-solid fa-house"></i>
+        <span>بيت</span>
+    </a>
+
+    <a href="/tasks">
+        <i class="fa-solid fa-newspaper"></i>
+        <span>أخبار</span>
+    </a>
+
+    <a href="/vip">
+        <i class="fa-solid fa-cube"></i>
+        <span>الكمية</span>
+    </a>
+
+    <a href="/team">
+        <i class="fa-solid fa-share-nodes"></i>
+        <span>الأصدقاء</span>
+    </a>
+
+    <a href="/profile">
+        <i class="fa-solid fa-user"></i>
+        <span>أنا</span>
+    </a>
+
+</div>
 
 <style>
 
+/* 🔥 مهم جداً */
 body{
-    margin:0;
-    font-family:Arial;
-    background:#e8d5ef;
-    padding-bottom:80px;
+    padding-bottom:110px;
 }
 
-/* container */
-.container{
-    max-width:360px;
-    margin:auto;
-    padding:12px;
-}
-
-/* top banner */
-.banner{
-    background:white;
-    border-radius:20px;
-    overflow:hidden;
-    margin-bottom:15px;
-}
-
-.banner img{
-    width:100%;
-    display:block;
-}
-
-/* balance card */
-.card{
-    background:#f5f5f5;
-    border-radius:20px;
-    padding:15px;
-    margin-bottom:15px;
-}
-
-.top-user{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.balance{
-    font-size:15px;
-    font-weight:bold;
-}
-
-.email{
-    margin-top:8px;
-    color:#333;
-    font-size:11px;
-}
-
-.vip{
-    background:#f5d48c;
-    padding:6px 14px;
-    border-radius:20px;
-    font-size:12px;
-}
-
-/* grid buttons */
-.grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:15px;
-    margin-top:20px;
-}
-
-.box{
-    background:#b57d8c;
-    border-radius:18px;
-    padding:12px;
-    color:black;
-    text-decoration:none;
-    text-align:center;
-    font-size:14px;
-    font-weight:bold;
-}
-
-.box img{
-    width:50px;
-    margin-bottom:10px;
-}
-
-/* VIP CARD */
-.vip-card{
-    text-align:center;
-    background:linear-gradient(135deg,#1c1c2b,#2a1450);
-    color:#fff;
-    border-radius:16px;
-    padding:15px;
-    margin-bottom:15px;
-}
-
-.vip-btn{
-    display:block;
-    background:#ffffff;
-    color:#000;
+/* feed داخل الصفحة */
+.notify-feed{
+    margin:15px;
+    background:#1b1f2e;
+    border:1px solid #00d4ff;
+    border-radius:14px;
     padding:10px;
-    border-radius:10px;
-    text-decoration:none;
-    font-weight:bold;
-    margin-top:10px;
+    color:white;
+    font-size:13px;
+    min-height:60px;
+
+    position:relative;
+
+    /* خليها تحت الشريط */
+    z-index:1;
 }
 
-/* big program box */
-.program{
-    background:#8c93e8;
-    border-radius:18px;
-    padding:12px;
-    margin-top:18px;
-    font-size:16px;
-    font-weight:bold;
-    color:black;
-    text-align:right;
-}
-
-/* bottom nav */
+/* bottom nav لازم يكون فوق كل شيء */
 .bottom-nav{
     position:fixed;
     bottom:0;
     left:0;
     right:0;
-    background:linear-gradient(135deg,#1a1a2b,#2a1450);
+
+    z-index:9999;
+}
+
+/* item */
+.notify-item{
+    padding:8px;
+    border-bottom:1px solid #222;
+    animation:fadeIn 0.4s ease;
     display:flex;
-    justify-content:space-around;
-    padding:10px 0;
-    border-top:1px solid rgba(255,255,255,0.1);
-    box-shadow:0 -5px 15px rgba(0,0,0,0.4);
+    align-items:center;
+    gap:8px;
 }
 
-.bottom-nav .item{
-    text-decoration:none;
-    color:#ccc;
-    text-align:center;
-    font-size:12px;
-    flex:1;
-    transition:0.2s;
+.notify-item:last-child{
+    border-bottom:none;
 }
 
-.bottom-nav .item:hover{
-    color:#fff;
-    transform:scale(1.1);
+.flag{
+    font-size:18px;
+}
+
+.name{
+    color:#00d4ff;
+    font-weight:bold;
+}
+
+@keyframes fadeIn{
+    from{opacity:0; transform:translateY(10px);}
+    to{opacity:1; transform:translateY(0);}
 }
 
 </style>
-</head>
 
-<body>
+<script>
 
-<!-- VIP CARD -->
-<div class="vip-card">
+/* بيانات الدول + أسماء */
+const feedData = [
+    {flag:"🇸🇾", name:"Ahmed"},
+    {flag:"🇸🇦", name:"Khaled"},
+    {flag:"🇦🇪", name:"Sarah"},
+    {flag:"🇰🇼", name:"Ali"},
+    {flag:"🇶🇦", name:"Noor"},
+    {flag:"🇴🇲", name:"Mohammed"}
+];
 
-    <h3 style="margin:0;">👑 VIP</h3>
+const amounts = ["120 USDT","350 USDT","90 USDT","500 USDT","240 USDT","1000 USDT"];
 
-    <p style="opacity:0.8; font-size:13px;">
-        ادخل إلى نظام VIP واربح يوميًا
-    </p>
+function addFeed(){
 
-    <a href="/vip" class="vip-btn">
-        🚀 دخول VIP
-    </a>
+    let feed = document.getElementById("notifyFeed");
 
-</div>
+    let user = feedData[Math.floor(Math.random() * feedData.length)];
+    let amount = amounts[Math.floor(Math.random() * amounts.length)];
 
-<div class="container">
+    let item = document.createElement("div");
+    item.className = "notify-item";
 
-    <!-- banner -->
-    <div class="banner">
-        <img src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a">
-    </div>
+    item.innerHTML = `
+        <span class="flag">${user.flag}</span>
+        <span>🔔</span>
+        <span class="name">${user.name}</span>
+        <span>سحب ${amount}</span>
+    `;
 
-    <!-- user -->
-    <div class="card">
+    feed.prepend(item);
 
-        <div class="top-user">
-            <div>
-                <div class="balance">{{ balance }}</div>
-                <div class="email">{{ email }}</div>
-            </div>
+    if(feed.children.length > 5){
+        feed.removeChild(feed.lastChild);
+    }
+}
 
-            <div class="vip">VIP1</div>
-        </div>
+/* كل 4 ثواني */
+setInterval(addFeed, 4000);
 
-        <!-- buttons -->
-        <div class="grid">
+</script>
 
-            <a class="box" href="/deposit">
-                🐷
-                <br>
-                تعبئة رصيد
-            </a>
-
-            <a class="box" href="/withdraw">
-                💳
-                <br>
-                ينسحب
-            </a>
-
-            <a class="box" href="/team">
-                ✉️
-                <br>
-                دعوة الأصدقاء
-            </a>
-
-            <a class="box" href="/agency">
-                👥
-                <br>
-                التعاون بين الوكالات
-            </a>
-
-        </div>
-
-    </div>
-
-    <!-- notifications -->
-    <div class="card">
-
-        <h3>📢 معلومات النظام</h3>
-
-        {% for n in notifications %}
-
-        <div style="
-        background:#f3f4f6;
-        padding:10px;
-        border-radius:12px;
-        margin-top:10px;
-        font-size:12px;
-        ">
-
-        ✅ {{ n[0] }}
-
-        <br><br>
-
-        {{ n[1] }}
-
-        </div>
-
-        {% endfor %}
-
-    </div>
-
-    <!-- program -->
-    <div class="program">
-        برنامج
-    </div>
-
-</div>
-
-<!-- bottom nav -->
-<div class="bottom-nav">
-
-    <a href="/" class="item">
-        🏠<br>الرئيسية
-    </a>
-
-    <a href="/vip" class="item">
-        👑<br>VIP
-    </a>
-
-    <a href="/team" class="item">
-        👥<br>الفريق
-    </a>
-
-    <a href="/withdraw" class="item">
-        💸<br>سحب
-    </a>
-
-</div>
+</script>
 
 </body>
-</html>          
+</html>

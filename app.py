@@ -1,11 +1,14 @@
 from flask import Flask, render_template, request, redirect, session, flash
 import sqlite3
 from datetime import datetime
+import random
+import smtplib
+from email.mime.text import MIMEText
 
 app = Flask(__name__)
 app.secret_key = "secret_key_123"
 
-# ================= DB =================
+# ================== DB ==================
 def init_db():
     conn = sqlite3.connect("db.db")
     c = conn.cursor()
@@ -17,9 +20,10 @@ def init_db():
         password TEXT,
         balance REAL DEFAULT 0,
         invite_code TEXT,
-        referred_by TEXT
-)
-""")
+        referred_by TEXT,
+        verified INTEGER DEFAULT 0
+    )
+    """)
 
     c.execute("""
     CREATE TABLE IF NOT EXISTS notifications (
@@ -27,6 +31,15 @@ def init_db():
         email TEXT,
         message TEXT,
         date TEXT
+    )
+    """)
+
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS email_codes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        email TEXT,
+        code TEXT,
+        created_at TEXT
     )
     """)
 
@@ -38,10 +51,10 @@ init_db()
 # ================= HOME =================
 @app.route("/")
 def home():
-    if "email" not in session:
+    if "user" not in session:
         return redirect("/login")
 
-    email = session["email"]
+    email = session["user"]
 
     conn = sqlite3.connect("db.db")
     c = conn.cursor()
@@ -49,137 +62,59 @@ def home():
     c.execute("SELECT balance FROM users WHERE email = ?", (email,))
     user = c.fetchone()
 
-    c.execute(
-    "SELECT message, date FROM notifications WHERE email = ? ORDER BY id DESC LIMIT 5",
-    (email,)
-)
-
+    c.execute("SELECT message, date FROM notifications WHERE email = ? ORDER BY id DESC LIMIT 5", (email,))
     notifications = c.fetchall()
 
     conn.close()
 
     balance = user[0] if user else 0
 
-    return render_template(
-    "home.html",
-    email=email,
-    balance=balance,
-    notifications=notifications
-)
+    return render_template("home.html", email=email, balance=balance, notifications=notifications)
 
-from datetime import datetime
-
+# ================= WITHDRAW =================
 @app.route("/withdraw", methods=["GET", "POST"])
 def withdraw():
 
-    if "email" not in session:
+    if "user" not in session:
         return redirect("/login")
 
-    email = session["email"]
+    email = session["user"]
 
     conn = sqlite3.connect("db.db")
     c = conn.cursor()
 
-    c.execute(
-        "SELECT balance FROM users WHERE email = ?",
-        (email,)
-    )
-
-    user = c.fetchone()
-    balance = user[0] if user else 0
+    c.execute("SELECT balance FROM users WHERE email=?", (email,))
+    balance = c.fetchone()[0]
 
     if request.method == "POST":
 
-        amount_text = request.form.get("amount")
-
-        if not amount_text:
-            conn.close()
-            flash("❌ أدخل مبلغ")
-            return redirect("/withdraw")
-
-        amount = float(amount_text)
+        amount = float(request.form["amount"])
 
         if amount < 15:
-            conn.close()
             flash("❌ الحد الأدنى 15")
             return redirect("/withdraw")
 
         if amount > balance:
-            conn.close()
-            flash("❌ لا يوجد رصيد كافي")
+            flash("❌ رصيد غير كافي")
             return redirect("/withdraw")
 
-        # خصم الرصيد
         new_balance = balance - amount
 
-        c.execute(
-            "UPDATE users SET balance = ? WHERE email = ?",
-            (new_balance, email)
-        )
+        c.execute("UPDATE users SET balance=? WHERE email=?", (new_balance, email))
 
-        # التاريخ الحقيقي
         now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
-        # إشعار
-        message = f"تم السحب بنجاح {amount} USDT"
-
-        c.execute(
-            "INSERT INTO notifications (email, message, date) VALUES (?, ?, ?)",
-            (email, message, now)
-        )
+        c.execute("INSERT INTO notifications(email,message,date) VALUES(?,?,?)",
+                  (email, f"تم السحب {amount} USDT", now))
 
         conn.commit()
         conn.close()
 
-        flash("✅ تم السحب بنجاح")
+        flash("✅ تم السحب")
         return redirect("/")
 
     conn.close()
-
-    return render_template(
-        "withdraw.html",
-        balance=balance
-    )
-
-# ================= DEPOSIT (IMPORTANT) =================
-@app.route("/deposit")
-def deposit():
-    return render_template("deposit.html")
-
-# ================= TEAM =================
-@app.route("/team")
-def team():
-
-    email = session["email"]
-
-    conn = sqlite3.connect("db.db")
-    c = conn.cursor()
-
-    # 🔥 جلب كود الدعوة
-    c.execute("SELECT invite_code FROM users WHERE email=?", (email,))
-    row = c.fetchone()
-
-    invite_code = row[0] if row else ""
-
-    # 🔥 رابط الدعوة
-    invite_link = f"http://127.0.0.1:8080/register?ref={invite_code}"
-
-    # 🔥 عدد الفريق
-    c.execute("SELECT COUNT(*) FROM users WHERE referred_by=?", (invite_code,))
-    team_count = c.fetchone()[0]
-
-    conn.close()
-
-    return render_template(
-        "team.html",
-        invite_link=invite_link,
-        team_count=team_count
-    )
-
-# ================= TASKS =================
-@app.route("/tasks")
-def tasks():
-    return render_template("tasks.html")
+    return render_template("withdraw.html", balance=balance)
 
 # ================= REGISTER =================
 @app.route("/register", methods=["GET", "POST"])
@@ -196,23 +131,20 @@ def register():
         conn = sqlite3.connect("db.db")
         c = conn.cursor()
 
-        # 🔥 كود الدعوة
-        invite_code = email.split("@")[0]
-
-        # 🔥 كود الإحالة من الرابط (لو موجود)
-        ref = request.args.get("ref")
-
-        try:
-            c.execute(
-                "INSERT INTO users (email, password, balance, invite_code, referred_by) VALUES (?, ?, ?, ?, ?)",
-                (email, password, 15, invite_code, ref)
-            )
-
-            conn.commit()
-
-        except:
+        c.execute("SELECT id FROM users WHERE email=?", (email,))
+        if c.fetchone():
+            conn.close()
             return "❌ الحساب موجود"
 
+        invite_code = email.split("@")[0]
+        ref = request.args.get("ref")
+
+        c.execute("""
+            INSERT INTO users (email, password, balance, invite_code, referred_by)
+            VALUES (?, ?, ?, ?, ?)
+        """, (email, password, 0, invite_code, ref))
+
+        conn.commit()
         conn.close()
 
         return redirect("/login")
@@ -222,6 +154,7 @@ def register():
 # ================= LOGIN =================
 @app.route("/login", methods=["GET", "POST"])
 def login():
+
     if request.method == "POST":
         email = request.form["email"]
         password = request.form["password"]
@@ -229,39 +162,81 @@ def login():
         conn = sqlite3.connect("db.db")
         c = conn.cursor()
 
-        c.execute("SELECT * FROM users WHERE email = ? AND password = ?", (email, password))
+        c.execute("SELECT * FROM users WHERE email=? AND password=?", (email, password))
         user = c.fetchone()
 
         conn.close()
 
         if user:
-            session["email"] = email
+            session["user"] = email
             return redirect("/")
         else:
             return "❌ خطأ بيانات"
 
     return render_template("login.html")
 
+# ================= TEAM =================
+@app.route("/team")
+def team():
+    if "user" not in session:
+        return redirect("/login")
+
+    email = session["user"]
+
+    conn = sqlite3.connect("db.db")
+    c = conn.cursor()
+
+    c.execute("SELECT invite_code FROM users WHERE email=?", (email,))
+    invite_code = c.fetchone()[0]
+
+    link = f"http://127.0.0.1:8080/register?ref={invite_code}"
+
+    c.execute("SELECT COUNT(*) FROM users WHERE referred_by=?", (invite_code,))
+    count = c.fetchone()[0]
+
+    conn.close()
+
+    return render_template("team.html", invite_link=link, team_count=count)
+
 # ================= VIP =================
 @app.route("/vip")
 def vip():
-
-    if "email" not in session:
+    if "user" not in session:
         return redirect("/login")
 
-    email = session["email"]
+    email = session["user"]
 
     conn = sqlite3.connect("db.db")
     c = conn.cursor()
 
     c.execute("SELECT balance FROM users WHERE email=?", (email,))
-    row = c.fetchone()
-
-    balance = row[0] if row else 0
+    balance = c.fetchone()[0]
 
     conn.close()
 
     return render_template("vip.html", balance=balance)
+
+# ================= 🔥 NEW ROUTES (FIXED BUTTONS) =================
+
+@app.route("/deposit")
+def deposit():
+    if "user" not in session:
+        return redirect("/login")
+    return render_template("deposit.html")
+
+
+@app.route("/tasks")
+def tasks():
+    if "user" not in session:
+        return redirect("/login")
+    return render_template("tasks.html")
+
+
+@app.route("/profile")
+def profile():
+    if "user" not in session:
+        return redirect("/login")
+    return render_template("profile.html")
 
 # ================= LOGOUT =================
 @app.route("/logout")

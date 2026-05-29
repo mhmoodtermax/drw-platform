@@ -5,59 +5,78 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>الفريق</title>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 <style>
 
 body{
     margin:0;
     font-family:Arial;
-    background:#e8d5ef;
+    background:#0f111a;
+    color:white;
 }
 
-/* زر الرجوع */
+/* back */
 .back{
     position:fixed;
     top:10px;
     left:10px;
-    background:#111;
-    color:#fff;
+    background:#00d4ff;
+    color:black;
     padding:8px 12px;
     border-radius:10px;
     text-decoration:none;
     font-size:12px;
-    z-index:999;
+    font-weight:bold;
 }
 
+/* container */
 .container{
     max-width:360px;
     margin:auto;
     padding:12px;
 }
 
+.title{
+    text-align:center;
+    font-size:20px;
+    margin:40px 0 15px;
+    color:#00d4ff;
+    font-weight:bold;
+}
+
+/* cards */
 .card{
-    background:#fff;
+    background:#1b1f2e;
     padding:15px;
     border-radius:16px;
     margin-bottom:15px;
 }
 
+/* link */
 .link-box{
-    background:#f1f1f1;
+    background:#0f111a;
     padding:10px;
     border-radius:10px;
     font-size:12px;
     word-break:break-all;
+    border:1px solid #00d4ff;
+    color:#00d4ff;
 }
 
+/* button */
 .btn{
-    background:#111;
-    color:#fff;
+    background:#00d4ff;
+    color:black;
     text-align:center;
     padding:10px;
     border-radius:10px;
     margin-top:10px;
     cursor:pointer;
+    font-weight:bold;
 }
 
+/* stats */
 .stats{
     display:grid;
     grid-template-columns:1fr 1fr;
@@ -65,18 +84,26 @@ body{
 }
 
 .stat{
-    background:#fff;
+    background:#1b1f2e;
     padding:10px;
     border-radius:12px;
     text-align:center;
+    font-size:13px;
 }
 
+.stat b{
+    display:block;
+    margin-top:5px;
+    color:#00d4ff;
+}
+
+/* levels */
 .levels{
     margin-top:15px;
 }
 
 .level{
-    background:#fff;
+    background:#1b1f2e;
     padding:12px;
     border-radius:12px;
     margin-bottom:10px;
@@ -84,36 +111,43 @@ body{
 
 .level h4{
     margin:0;
+    color:#00d4ff;
 }
 
 .level p{
     margin:5px 0;
-    color:#444;
+    color:#fff;
 }
 
 .level span{
     font-size:12px;
-    color:#888;
+    color:#aaa;
 }
 
-.small{
-    font-size:12px;
-    color:#666;
-    margin-top:10px;
+.level b{
+    display:block;
+    margin-top:5px;
+    color:#00d4ff;
+    font-size:13px;
 }
 
-/* Toast */
+/* toast */
 #toast{
     position:fixed;
-    bottom:20px;
+    bottom:80px;
     left:50%;
     transform:translateX(-50%);
-    background:#111;
-    color:#fff;
-    padding:10px 14px;
-    border-radius:12px;
+    background:rgba(0,0,0,0.85);
+    color:#00d4ff;
+    padding:12px 16px;
+    border-radius:14px;
     font-size:13px;
     display:none;
+    border:1px solid #00d4ff;
+    box-shadow:0 0 15px rgba(0,212,255,0.3);
+    display:flex;
+    align-items:center;
+    gap:8px;
 }
 
 </style>
@@ -122,101 +156,116 @@ body{
 
 <body>
 
-<!-- زر رجوع -->
-<a class="back" href="/">
-    ⬅ رجوع
-</a>
+<a class="back" href="/">⬅ رجوع</a>
 
 <div class="container">
 
-    <div class="title">👥 فريق الإحالة</div>
+<div class="title">👥 فريق الإحالة</div>
 
-    <!-- رابط الدعوة -->
-    <div class="card">
+<!-- رابط الدعوة -->
+<div class="card">
 
-        <div class="small">شارك رابط الإحالة واكسب أرباح</div>
-
-        <div class="link-box">
-            {{ invite_link }}
-        </div>
-
-        <div class="btn" onclick="copyLink()">
-            📋 نسخ الرابط
-        </div>
-
+    <div style="font-size:12px;margin-bottom:8px;">
+        شارك رابط الإحالة واكسب عمولة
     </div>
 
-    <!-- إحصائيات -->
-    <div class="stats">
-
-        <div class="stat">
-            <span>فريق جديد</span>
-            <b>{{ team_count }}</b>
-        </div>
-
-        <div class="stat">
-            <span>إعادة شحن</span>
-            <b>$0.00</b>
-        </div>
-
-        <div class="stat">
-            <span>إعادة الشحن الأولى</span>
-            <b>0</b>
-        </div>
-
-        <div class="stat">
-            <span>سحب أول مرة</span>
-            <b>0</b>
-        </div>
-
+    <div class="link-box" id="inviteLink">
+        {{ invite_link }}
     </div>
 
-    <!-- المستويات -->
-    <div class="levels">
-
-        <div class="level">
-            <h4>المستوى 1</h4>
-            <p>13%</p>
-            <span>4/4</span>
-            <b>0 USDT</b>
-        </div>
-
-        <div class="level">
-            <h4>المستوى 2</h4>
-            <p>3%</p>
-            <span>0/0</span>
-            <b>0 USDT</b>
-        </div>
-
-        <div class="level">
-            <h4>المستوى 3</h4>
-            <p>2%</p>
-            <span>0/0</span>
-            <b>0 USDT</b>
-        </div>
-
+    <div class="btn" onclick="copyLink()">
+        📋 نسخ الرابط
     </div>
 
 </div>
 
-<!-- Toast -->
-<div id="toast"></div>
+<!-- stats -->
+<div class="stats">
+
+    <div class="stat">
+        <span>فريق جديد</span>
+        <b>{{ team_count }}</b>
+    </div>
+
+    <div class="stat">
+        <span>إعادة شحن</span>
+        <b>$0.00</b>
+    </div>
+
+    <div class="stat">
+        <span>أول إيداع</span>
+        <b>0</b>
+    </div>
+
+    <div class="stat">
+        <span>سحب</span>
+        <b>0</b>
+    </div>
+
+</div>
+
+<!-- levels -->
+<div class="levels">
+
+    <div class="level">
+        <h4>🔥 فريق A</h4>
+        <p>نسبة: 20%</p>
+        <span>المستوى الأول</span>
+        <b>0 USDT</b>
+    </div>
+
+    <div class="level">
+        <h4>⚡ فريق B</h4>
+        <p>نسبة: 10%</p>
+        <span>المستوى الثاني</span>
+        <b>0 USDT</b>
+    </div>
+
+    <div class="level">
+        <h4>🎯 فريق C</h4>
+        <p>نسبة: 5%</p>
+        <span>المستوى الثالث</span>
+        <b>0 USDT</b>
+    </div>
+
+</div>
+
+</div>
+
+<!-- toast -->
+<div id="toast">
+    <i class="fa-solid fa-circle-check"></i>
+    <span id="toastText">تم النسخ</span>
+</div>
+
+<!-- صوت -->
+<audio id="sound">
+    <source src="https://assets.mixkit.co/sfx/preview/mixkit-interface-click-1126.mp3">
+</audio>
 
 <script>
+
 function showToast(msg){
     let t = document.getElementById("toast");
-    t.innerText = msg;
-    t.style.display = "block";
+    document.getElementById("toastText").innerText = msg;
+
+    t.style.display = "flex";
 
     setTimeout(()=>{
         t.style.display = "none";
-    }, 2000);
+    },2000);
 }
 
 function copyLink(){
-    navigator.clipboard.writeText("{{ invite_link }}");
-    showToast("✅ تم نسخ الرابط");
+    let link = document.getElementById("inviteLink").innerText;
+
+    navigator.clipboard.writeText(link);
+
+    document.getElementById("sound").play();
+
+    showToast("تم نسخ رابط الدعوة");
 }
+
 </script>
 
 </body>

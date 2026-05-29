@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الحساب</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial;
+    background:#0f111a;
+    color:white;
+}
+
+/* animation */
+@keyframes fadeUp{
+    from{
+        opacity:0;
+        transform:translateY(25px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* top card */
+.top{
+    animation:fadeUp 0.7s ease;
+}
+
+/* grid cards */
+.card{
+    animation:fadeUp 1s ease;
+}
+
+/* details */
+.full{
+    animation:fadeUp 1.2s ease;
+}
+
+/* back */
+.back{
+    position:fixed;
+    top:10px;
+    left:10px;
+    background:#00d4ff;
+    color:black;
+    padding:8px 12px;
+    border-radius:10px;
+    text-decoration:none;
+    font-size:12px;
+    font-weight:bold;
+}
+
+/* container */
+.container{
+    max-width:380px;
+    margin:auto;
+    padding:15px;
+}
+
+/* top card */
+.top{
+    background:linear-gradient(135deg,#1b1f2e,#0f111a);
+    border:1px solid #00d4ff;
+    border-radius:18px;
+    padding:18px;
+    text-align:center;
+    margin-top:40px;
+    box-shadow:0 0 20px rgba(0,212,255,0.15);
+}
+
+.top h2{
+    margin:0;
+    color:#00d4ff;
+}
+
+.top p{
+    margin:5px 0;
+    font-size:13px;
+    color:#aaa;
+}
+
+/* big balance */
+.balance{
+    font-size:28px;
+    font-weight:bold;
+    color:#00d4ff;
+    margin-top:10px;
+}
+
+/* grid cards */
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:15px;
+}
+
+/* card */
+.card{
+    background:#1b1f2e;
+    border-radius:14px;
+    padding:12px;
+    text-align:center;
+    border:1px solid #222;
+}
+
+.card span{
+    font-size:12px;
+    color:#aaa;
+}
+
+.card b{
+    display:block;
+    margin-top:5px;
+    color:#00d4ff;
+}
+
+/* full card */
+.full{
+    background:#1b1f2e;
+    margin-top:10px;
+    padding:12px;
+    border-radius:14px;
+    border:1px solid #222;
+}
+
+.row{
+    display:flex;
+    justify-content:space-between;
+    padding:8px 0;
+    border-bottom:1px solid #222;
+    font-size:13px;
+}
+
+.row:last-child{
+    border-bottom:none;
+}
+
+.label{
+    color:#aaa;
+}
+
+.value{
+    color:#00d4ff;
+}
+
+.logout-btn{
+    display:block;
+    margin-top:15px;
+    padding:12px;
+    background:#ff3b3b;
+    color:white;
+    text-align:center;
+    border-radius:12px;
+    text-decoration:none;
+    font-weight:bold;
+    transition:0.2s;
+box-shadow:0 0 15px rgba(255,0,0,0.2);
+
+}
+
+.logout-btn:hover{
+    background:#ff1f1f;
+    transform:scale(1.02);
+}
+
+</style>
+
+</head>
+
+<body>
+
+<a class="back" href="/">⬅ رجوع</a>
+
+<div class="container">
+
+<!-- USER CARD -->
+<div class="top">
+    <h2>DRW</h2>
+    <p>{{ email }}</p>
+    <p>Ordinary user</p>
+
+    <div class="balance">${{ balance }}</div>
+</div>
+
+<!-- SMALL STATS -->
+<div class="grid">
+
+    <div class="card">
+        <span>إجمالي الأصول</span>
+        <b>${{ balance }}</b>
+    </div>
+
+    <div class="card">
+        <span>أرباح اليوم</span>
+        <b>0.00</b>
+    </div>
+
+    <div class="card">
+        <span>اللجنة اليوم</span>
+        <b>0</b>
+    </div>
+
+    <div class="card">
+        <span>إجمالي الإيرادات</span>
+        <b>$0.00</b>
+    </div>
+
+</div>
+
+<!-- DETAILS -->
+<div class="full">
+
+    <div class="row">
+        <span class="label">الحساب الكمي</span>
+        <span class="value">0.00</span>
+    </div>
+
+    <div class="row">
+        <span class="label">أصول الربح</span>
+        <span class="value">0.00</span>
+    </div>
+
+    <div class="row">
+        <span class="label">مبلغ إعادة الشحن</span>
+        <span class="value">0</span>
+    </div>
+
+<a href="/logout" class="logout-btn">
+    🚪 تسجيل خروج
+</a>
+
+</div>
+
+</div>
+
+</body>
+</html>

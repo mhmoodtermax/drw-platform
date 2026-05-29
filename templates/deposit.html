@@ -3,110 +3,126 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تعبئة رصيد</title>
+<title>إيداع</title>
 
 <style>
 body{
     margin:0;
     font-family:Arial;
-    background:#e8d5ef;
+    background:#0f111a;
+    color:white;
 }
 
+/* back */
 .back{
     position:fixed;
     top:12px;
     left:12px;
-    background:#7c3aed;
-    color:white;
+    background:#00d4ff;
+    color:black;
     padding:6px 10px;
     border-radius:10px;
     text-decoration:none;
     font-size:12px;
+    font-weight:bold;
 }
 
+/* container */
 .container{
-    max-width:360px;
+    max-width:420px;
     margin:auto;
     padding:15px;
 }
 
 .title{
     text-align:center;
-    font-size:18px;
-    margin-top:20px;
+    font-size:20px;
+    margin-top:40px;
     font-weight:bold;
+    color:#00d4ff;
 }
 
 /* card */
 .card{
-    background:white;
-    border-radius:18px;
+    background:#1b1f2e;
     padding:15px;
-    margin-top:15px;
-    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+    border-radius:15px;
 }
 
 /* row */
 .row{
     display:flex;
-    align-items:center;
     justify-content:space-between;
-    background:#f3f4f6;
-    padding:10px;
-    border-radius:12px;
-    margin-top:10px;
+    padding:8px 0;
+    border-bottom:1px solid #222;
     font-size:13px;
+}
+
+/* wallet box */
+.wallet{
+    background:#0f111a;
+    border:1px solid #00d4ff;
+    padding:10px;
+    border-radius:10px;
+    font-size:12px;
     word-break:break-all;
+    color:#00d4ff;
 }
 
-/* coin icons */
-.coins{
-    display:flex;
-    gap:8px;
-    margin-bottom:10px;
-}
-
-.coins img{
-    width:28px;
-    height:28px;
-    border-radius:50%;
-}
-
-/* buttons */
+/* button */
 button{
     width:100%;
     padding:11px;
-    margin-top:10px;
+    margin-top:12px;
     border:none;
     border-radius:12px;
     font-size:14px;
     cursor:pointer;
+    background:#00d4ff;
+    color:black;
+    font-weight:bold;
 }
 
-.copy{
-    background:#7c3aed;
-    color:white;
+/* small text */
+.small{
+    font-size:12px;
+    color:#aaa;
+    margin-top:10px;
+    line-height:1.6;
 }
 
-.done{
-    background:#111;
-    color:white;
-}
-
-/* notification */
+/* ===== TOAST ===== */
 #toast{
     position:fixed;
     bottom:80px;
     left:50%;
     transform:translateX(-50%);
-    background:#111;
-    color:white;
-    padding:10px 15px;
-    border-radius:12px;
+    background:rgba(0,0,0,0.85);
+    color:#00d4ff;
+    padding:12px 18px;
+    border-radius:14px;
     font-size:13px;
     display:none;
+    border:1px solid #00d4ff;
+    box-shadow:0 0 15px rgba(0,212,255,0.3);
+    display:flex;
+    align-items:center;
+    gap:8px;
+    animation:fadeIn 0.3s ease;
+}
+
+#toast i{
+    color:#00d4ff;
+}
+
+@keyframes fadeIn{
+    from{opacity:0; transform:translateX(-50%) translateY(10px);}
+    to{opacity:1; transform:translateX(-50%) translateY(0);}
 }
 </style>
+
+<!-- Font Awesome للأيقونة -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 </head>
 
@@ -116,35 +132,35 @@ button{
 
 <div class="container">
 
-    <div class="title">💰 تعبئة رصيد</div>
+    <div class="title">💰 إيداع USDT</div>
 
     <div class="card">
 
-        <!-- coins icons -->
-        <div class="coins">
-            <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" />
-            <img src="https://cryptologos.cc/logos/tron-trx-logo.png" />
-            <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" />
+        <div class="row">
+            <span>📌 الشبكة</span>
+            <span>TRC20</span>
         </div>
-
-        <div>TRC20-USDT</div>
 
         <div class="row">
-            <span>💳 العنوان</span>
+            <span>📍 عنوان الإيداع</span>
         </div>
 
-        <div class="row" id="wallet">
+        <!-- wallet address -->
+        <div class="wallet">
             TPpBXMa6s9XEQxfwjvDikeMY9sdEEpe2MD
         </div>
 
-        <button class="copy" onclick="copyText()">📋 نسخ العنوان</button>
+        <div class="row">
+            <span>⚠ مهم</span>
+            <span>انسخ العنوان بدقة</span>
+        </div>
 
-        <button class="done" onclick="done()">✔ اكتملت العملية</button>
+        <button onclick="copyAddress()">📋 نسخ العنوان</button>
 
-        <div style="font-size:12px; margin-top:12px; color:#555; line-height:1.7;">
-            ✅ فقط TRC20-USDT<br>
-            ✅ الحد الأدنى 5$<br>
-            ⚠ أي مبلغ أقل لن يُضاف
+        <div class="small">
+            ⚠ أرسل USDT فقط على شبكة TRC20<br>
+            ⚠ أي شبكة أخرى قد تفقد الأموال<br>
+            ⚠ الإيداع يتم خلال دقائق
         </div>
 
     </div>
@@ -152,27 +168,39 @@ button{
 </div>
 
 <!-- toast -->
-<div id="toast"></div>
+<div id="toast">
+    <i class="fa-solid fa-circle-check"></i>
+    <span id="toastText">تم النسخ</span>
+</div>
+
+<!-- صوت -->
+<audio id="copySound">
+    <source src="https://assets.mixkit.co/sfx/preview/mixkit-interface-click-1126.mp3" type="audio/mpeg">
+</audio>
 
 <script>
 function showToast(msg){
     let t = document.getElementById("toast");
-    t.innerText = msg;
-    t.style.display = "block";
+    let text = document.getElementById("toastText");
+
+    text.innerText = msg;
+    t.style.display = "flex";
 
     setTimeout(()=>{
         t.style.display = "none";
     }, 2000);
 }
 
-function copyText(){
-    let text = document.getElementById("wallet").innerText;
-    navigator.clipboard.writeText(text);
-    showToast("📋 تم النسخ بنجاح");
-}
+function copyAddress(){
+    navigator.clipboard.writeText("TPpBXMa6s9XEQxfwjvDikeMY9sdEEpe2MD");
 
-function done(){
-    showToast("⏳ تم إرسال الطلب للمراجعة");
+    // صوت
+    let sound = document.getElementById("copySound");
+    sound.currentTime = 0;
+    sound.play();
+
+    // إشعار
+    showToast("تم نسخ العنوان بنجاح");
 }
 </script>
 
