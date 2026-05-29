@@ -19,7 +19,6 @@ body{
     min-height:100vh;
 }
 
-/* card */
 .card{
     width:90%;
     max-width:360px;
@@ -28,7 +27,6 @@ body{
     border-radius:18px;
     box-shadow:0 0 20px rgba(0,212,255,0.15);
     text-align:center;
-    transition:0.3s;
 }
 
 /* flag */
@@ -42,12 +40,6 @@ body{
     background:#0f111a;
 }
 
-/* title */
-h2{
-    margin:10px 0;
-    color:#00d4ff;
-}
-
 /* inputs */
 input{
     width:100%;
@@ -58,13 +50,6 @@ input{
     background:#0f111a;
     color:white;
     outline:none;
-    font-size:13px;
-    transition:0.2s;
-}
-
-input:focus{
-    border-color:#00d4ff;
-    box-shadow:0 0 8px rgba(0,212,255,0.3);
 }
 
 /* button */
@@ -78,34 +63,9 @@ button{
     color:black;
     font-weight:bold;
     cursor:pointer;
-    font-size:14px;
 }
 
-button:hover{
-    transform:scale(1.02);
-}
-
-/* link */
-a{
-    display:block;
-    margin-top:12px;
-    color:#aaa;
-    font-size:12px;
-    text-decoration:none;
-}
-
-a:hover{
-    color:#00d4ff;
-}
-
-/* small text */
-small{
-    display:block;
-    margin-top:10px;
-    color:#666;
-}
-
-/* 🔥 toast */
+/* toast */
 #toast{
     position:fixed;
     bottom:80px;
@@ -115,42 +75,23 @@ small{
     color:#00d4ff;
     padding:12px 16px;
     border-radius:14px;
-    font-size:13px;
-    border:1px solid #00d4ff;
     display:none;
-    box-shadow:0 0 15px rgba(0,212,255,0.3);
-    z-index:9999;
-}
-
-/* shake */
-.shake{
-    animation:shake 0.3s;
-}
-
-@keyframes shake{
-    0%{transform:translateX(0);}
-    25%{transform:translateX(-5px);}
-    50%{transform:translateX(5px);}
-    75%{transform:translateX(-5px);}
-    100%{transform:translateX(0);}
 }
 
 </style>
-
 </head>
 
 <body>
 
-<div class="card" id="card">
+<div class="card">
 
-    <!-- 🇸🇦 علم السعودية -->
     <img class="flag"
          src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg"
          alt="Saudi Flag">
 
     <h2>إنشاء حساب جديد</h2>
 
-    <form method="POST" onsubmit="return validateRegister(event)">
+    <form method="POST">
 
         <input type="text" name="name" placeholder="الاسم الكامل" required>
 
@@ -159,6 +100,9 @@ small{
         <input type="password" id="password" name="password" placeholder="كلمة المرور" required>
 
         <input type="password" id="confirm" name="confirm" placeholder="تأكيد كلمة المرور" required>
+
+        <!-- 🔥 هذا مهم لنظام الإحالات -->
+        <input type="hidden" name="ref" value="{{ request.args.get('ref') }}">
 
         <button type="submit">تسجيل</button>
 
@@ -170,7 +114,6 @@ small{
 
 </div>
 
-<!-- toast -->
 <div id="toast"></div>
 
 <script>
@@ -185,25 +128,17 @@ function showToast(msg){
     }, 2500);
 }
 
-function validateRegister(e){
+document.querySelector("form").addEventListener("submit", function(e){
 
     let pass = document.getElementById("password").value;
     let confirm = document.getElementById("confirm").value;
-    let card = document.getElementById("card");
 
     if(pass !== confirm){
         e.preventDefault();
-
         showToast("❌ كلمتا المرور غير متطابقتين");
-
-        card.classList.add("shake");
-        setTimeout(()=>card.classList.remove("shake"), 300);
-
-        return false;
     }
 
-    return true;
-}
+});
 
 </script>
 

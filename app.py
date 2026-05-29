@@ -62,14 +62,19 @@ def home():
     c.execute("SELECT balance FROM users WHERE email = ?", (email,))
     user = c.fetchone()
 
-    c.execute("SELECT message, date FROM notifications WHERE email = ? ORDER BY id DESC LIMIT 5", (email,))
+    c.execute("SELECT message, date FROM notifications")
     notifications = c.fetchall()
 
     conn.close()
 
     balance = user[0] if user else 0
 
-    return render_template("home.html", email=email, balance=balance, notifications=notifications)
+    return render_template(
+        "home.html",
+        email=email,
+        balance=balance,
+        notifications=notifications
+    )
 
 # ================= WITHDRAW =================
 @app.route("/withdraw", methods=["GET", "POST"])
@@ -120,6 +125,9 @@ def withdraw():
 @app.route("/register", methods=["GET", "POST"])
 def register():
 
+    # نخزن ref من الرابط (GET)
+    ref = request.args.get("ref")
+
     if request.method == "POST":
 
         email = request.form["email"]
@@ -136,9 +144,10 @@ def register():
             conn.close()
             return "❌ الحساب موجود"
 
-        invite_code = email.split("@")[0]
-        ref = request.args.get("ref")
+        import uuid
+        invite_code = str(uuid.uuid4())[:8]
 
+        # 🔥 حفظ بيانات المستخدم مع الإحالة
         c.execute("""
             INSERT INTO users (email, password, balance, invite_code, referred_by)
             VALUES (?, ?, ?, ?, ?)
@@ -189,7 +198,7 @@ def team():
     c.execute("SELECT invite_code FROM users WHERE email=?", (email,))
     invite_code = c.fetchone()[0]
 
-    link = f"http://127.0.0.1:8080/register?ref={invite_code}"
+    link = f"https://drw-platform.onrender.com/register?ref={invite_code}"
 
     c.execute("SELECT COUNT(*) FROM users WHERE referred_by=?", (invite_code,))
     count = c.fetchone()[0]
