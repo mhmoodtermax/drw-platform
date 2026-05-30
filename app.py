@@ -88,7 +88,7 @@ def withdraw():
     conn = sqlite3.connect("db.db")
     c = conn.cursor()
 
-    # GET
+    # ================= GET =================
     if request.method == "GET":
 
         c.execute("SELECT balance FROM users WHERE email=?", (email,))
@@ -100,19 +100,21 @@ def withdraw():
 
         return render_template("withdraw.html", balance=balance)
 
-    # POST
+    # ================= POST =================
     try:
 
+        # get balance
         c.execute("SELECT balance FROM users WHERE email=?", (email,))
         row = c.fetchone()
 
-        if amount > balance:
-             flash("❌ لا يوجد رصيد كافي")
-             return redirect("/withdraw")
-
+        if not row:
+            conn.close()
+            flash("❌ لا يوجد رصيد كافي")
+            return redirect("/withdraw")
 
         balance = row[0]
 
+        # get amount safely
         amount_text = request.form.get("amount", "").strip()
 
         if not amount_text:
@@ -139,9 +141,10 @@ def withdraw():
 
         if amount > balance:
             conn.close()
-            flash("❌ رصيد غير كافي")
+            flash("❌ لا يوجد رصيد كافي")
             return redirect("/withdraw")
 
+        # update balance
         new_balance = balance - amount
 
         c.execute(
