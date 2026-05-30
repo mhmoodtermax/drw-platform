@@ -88,41 +88,58 @@ def withdraw():
     conn = sqlite3.connect("db.db")
     c = conn.cursor()
 
-    # 🔥 GET request
+    # GET
     if request.method == "GET":
+
         c.execute("SELECT balance FROM users WHERE email=?", (email,))
         row = c.fetchone()
 
         balance = row[0] if row else 0
 
         conn.close()
+
         return render_template("withdraw.html", balance=balance)
 
-    # 🔥 POST request (السحب)
+    # POST
     try:
+
         c.execute("SELECT balance FROM users WHERE email=?", (email,))
         row = c.fetchone()
 
         if not row:
             conn.close()
-            return "User not found"
+            flash("❌ المستخدم غير موجود")
+            return redirect("/withdraw")
 
         balance = row[0]
 
-        amount = float(request.form.get("amount", 0))
+        amount_text = request.form.get("amount", "").strip()
+
+        if not amount_text:
+            conn.close()
+            flash("❌ أدخل مبلغ السحب")
+            return redirect("/withdraw")
+
+        try:
+            amount = float(amount_text)
+        except ValueError:
+            conn.close()
+            flash("❌ أدخل رقم صحيح")
+            return redirect("/withdraw")
 
         if amount <= 0:
             conn.close()
-            return "❌ مبلغ غير صحيح"
+            flash("❌ مبلغ غير صحيح")
+            return redirect("/withdraw")
 
         if amount < 15:
-            flash("❌ الحد الأدنى 15")
             conn.close()
+            flash("❌ الحد الأدنى للسحب 15 USDT")
             return redirect("/withdraw")
 
         if amount > balance:
-            flash("❌ رصيد غير كافي")
             conn.close()
+            flash("❌ رصيد غير كافي")
             return redirect("/withdraw")
 
         new_balance = balance - amount
@@ -147,7 +164,8 @@ def withdraw():
 
     except Exception as e:
         conn.close()
-        return f"Server Error: {str(e)}"
+        flash(f"❌ خطأ: {str(e)}")
+        return redirect("/withdraw")
 
 # ================= REGISTER =================
 @app.route("/register", methods=["GET", "POST"])
