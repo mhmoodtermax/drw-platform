@@ -270,6 +270,7 @@ def team():
 # ================= VIP =================
 @app.route("/vip")
 def vip():
+
     if "user" not in session:
         return redirect("/login")
 
@@ -279,7 +280,14 @@ def vip():
     c = conn.cursor()
 
     c.execute("SELECT balance FROM users WHERE email=?", (email,))
-    balance = c.fetchone()[0]
+    row = c.fetchone()
+
+    if not row:
+        conn.close()
+        balance = 0
+        return render_template("vip.html", balance=balance)
+
+    balance = row[0]
 
     conn.close()
 
