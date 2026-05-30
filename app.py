@@ -88,76 +88,54 @@ def withdraw():
     conn = sqlite3.connect("db.db")
     c = conn.cursor()
 
-    # ================= GET =================
     if request.method == "GET":
-
         c.execute("SELECT balance FROM users WHERE email=?", (email,))
         row = c.fetchone()
-
-        balance = row[0] if row else 0
-
         conn.close()
 
+        balance = row[0] if row else 0
         return render_template("withdraw.html", balance=balance)
 
-    # ================= POST =================
     try:
-
-        # get balance
         c.execute("SELECT balance FROM users WHERE email=?", (email,))
         row = c.fetchone()
 
-        if not row:
+        if row is None:
             conn.close()
-            flash("❌ لا يوجد رصيد كافي")
-            return redirect("/withdraw")
+            flash("❌ الحساب غير موجود")
+            return redirect("/login")
 
         balance = row[0]
 
-        # get amount safely
         amount_text = request.form.get("amount", "").strip()
 
         if not amount_text:
-            conn.close()
-            flash("❌ أدخل مبلغ السحب")
+            flash("❌ أدخل مبلغ")
             return redirect("/withdraw")
 
         try:
             amount = float(amount_text)
-        except ValueError:
-            conn.close()
-            flash("❌ أدخل رقم صحيح")
-            return redirect("/withdraw")
-
-        if amount <= 0:
-            conn.close()
-            flash("❌ مبلغ غير صحيح")
+        except:
+            flash("❌ رقم غير صحيح")
             return redirect("/withdraw")
 
         if amount < 15:
-            conn.close()
-            flash("❌ الحد الأدنى للسحب 15 USDT")
+            flash("❌ الحد الأدنى 15")
             return redirect("/withdraw")
 
         if amount > balance:
-            conn.close()
             flash("❌ لا يوجد رصيد كافي")
             return redirect("/withdraw")
 
-        # update balance
         new_balance = balance - amount
 
-        c.execute(
-            "UPDATE users SET balance=? WHERE email=?",
-            (new_balance, email)
-        )
+        c.execute("UPDATE users SET balance=? WHERE email=?", (new_balance, email))
 
+        from datetime import datetime
         now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
-        c.execute(
-            "INSERT INTO notifications(email,message,date) VALUES(?,?,?)",
-            (email, f"تم السحب {amount} USDT", now)
-        )
+        c.execute("INSERT INTO notifications(email,message,date) VALUES(?,?,?)",
+                  (email, f"تم السحب {amount} USDT", now))
 
         conn.commit()
         conn.close()
@@ -174,16 +152,17 @@ def withdraw():
 @app.route("/register", methods=["GET", "POST"])
 def register():
 
-    # نخزن ref من الرابط (GET)
     ref = request.args.get("ref")
 
     if request.method == "POST":
 
         email = request.form["email"]
         password = request.form["password"]
+        ref = request.form.get("ref")  # مهم
 
         if "@gmail.com" not in email:
-            return "❌ لازم Gmail فقط"
+            flash("❌ لازم Gmail فقط")
+            return redirect("/register")
 
         conn = sqlite3.connect("db.db")
         c = conn.cursor()
@@ -191,12 +170,12 @@ def register():
         c.execute("SELECT id FROM users WHERE email=?", (email,))
         if c.fetchone():
             conn.close()
-            return "❌ الحساب موجود"
+            flash("❌ الحساب موجود")
+            return redirect("/register")
 
         import uuid
         invite_code = str(uuid.uuid4())[:8]
 
-        # 🔥 حفظ بيانات المستخدم مع الإحالة
         c.execute("""
             INSERT INTO users (email, password, balance, invite_code, referred_by)
             VALUES (?, ?, ?, ?, ?)
@@ -205,6 +184,7 @@ def register():
         conn.commit()
         conn.close()
 
+        flash("✅ تم إنشاء الحساب")
         return redirect("/login")
 
     return render_template("register.html")
@@ -237,12 +217,11 @@ def login():
 # ================= TEAM =================
 @app.route("/team")
 def team():
+
     if "user" not in session:
         return redirect("/login")
 
     email = session["user"]
-
-    print("SESSION =", email)
 
     conn = sqlite3.connect("db.db")
     c = conn.cursor()
@@ -250,15 +229,18 @@ def team():
     c.execute("SELECT invite_code FROM users WHERE email=?", (email,))
     row = c.fetchone()
 
-    print("ROW =", row)
+    conn.close()
 
-    if not row:
-        conn.close()
-        return f"User not found: {email}"
+    if row is None:
+        flash("❌ الحساب غير موجود في قاعدة البيانات")
+        return redirect("/logout")
 
     invite_code = row[0]
 
     link = f"https://drw-platform.onrender.com/register?ref={invite_code}"
+
+    conn = sqlite3.connect("db.db")
+    c = conn.cursor()
 
     c.execute("SELECT COUNT(*) FROM users WHERE referred_by=?", (invite_code,))
     count = c.fetchone()[0]
