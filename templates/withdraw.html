@@ -111,6 +111,16 @@ button{
     line-height:1.6;
 }
 
+/* flash box */
+.flash{
+    background:#111;
+    padding:10px;
+    border-radius:12px;
+    margin-bottom:10px;
+    color:#00d4ff;
+    text-align:center;
+}
+
 /* toast */
 #toast{
     position:fixed;
@@ -138,13 +148,14 @@ button{
 
     <div class="card">
 
-        <!-- flash messages -->
+        <!-- FLASH MESSAGES -->
         {% with messages = get_flashed_messages() %}
           {% if messages %}
             {% for msg in messages %}
-              <div style="background:#111;padding:10px;border-radius:12px;margin-bottom:10px;font-size:13px;border:1px solid #00d4ff;">
-                {{ msg }}
-              </div>
+              <div class="flash">{{ msg }}</div>
+              <script>
+                showToast("{{ msg }}");
+              </script>
             {% endfor %}
           {% endif %}
         {% endwith %}
@@ -162,7 +173,7 @@ button{
 
         <div class="row">
             <span>💰 الرصيد</span>
-            <span id="balance">{{ balance }}</span>
+            <span>{{ balance }}</span>
         </div>
 
         <div class="row">
@@ -177,11 +188,11 @@ button{
 
         <form method="POST">
 
-            <input type="number" name="amount" placeholder="المبلغ">
+            <input type="number" name="amount" placeholder="المبلغ" required>
 
-            <input type="text" name="address" placeholder="عنوان TRC20">
+            <input type="text" name="address" placeholder="عنوان TRC20" required>
 
-            <input type="password" name="password" placeholder="كلمة المرور">
+            <input type="password" name="password" placeholder="كلمة المرور" required>
 
             <button type="submit">✔ تأكيد السحب</button>
 
@@ -206,7 +217,7 @@ function showToast(msg){
 
     setTimeout(()=>{
         t.style.display = "none";
-    },2000);
+    }, 2500);
 }
 </script>
 

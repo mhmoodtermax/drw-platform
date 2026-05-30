@@ -106,10 +106,10 @@ def withdraw():
         c.execute("SELECT balance FROM users WHERE email=?", (email,))
         row = c.fetchone()
 
-        if not row:
-            conn.close()
-            flash("❌ المستخدم غير موجود")
-            return redirect("/withdraw")
+        if amount > balance:
+             flash("❌ لا يوجد رصيد كافي")
+             return redirect("/withdraw")
+
 
         balance = row[0]
 
