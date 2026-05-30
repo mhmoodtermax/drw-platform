@@ -242,23 +242,24 @@ def team():
 
     email = session["user"]
 
+    print("SESSION =", email)
+
     conn = sqlite3.connect("db.db")
     c = conn.cursor()
 
-    # invite code للمستخدم
     c.execute("SELECT invite_code FROM users WHERE email=?", (email,))
     row = c.fetchone()
 
+    print("ROW =", row)
+
     if not row:
         conn.close()
-        return "User not found"
+        return f"User not found: {email}"
 
     invite_code = row[0]
 
-    # رابط الدعوة الصحيح
     link = f"https://drw-platform.onrender.com/register?ref={invite_code}"
 
-    # عدد الفريق (المهم هنا referred_by)
     c.execute("SELECT COUNT(*) FROM users WHERE referred_by=?", (invite_code,))
     count = c.fetchone()[0]
 
