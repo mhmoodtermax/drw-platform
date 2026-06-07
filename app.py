@@ -203,6 +203,8 @@ def login():
         c.execute("SELECT * FROM users WHERE email=? AND password=?", (email, password))
         user = c.fetchone()
 
+        print("LOGIN:", email, password, user)
+
         conn.close()
 
         if user:
